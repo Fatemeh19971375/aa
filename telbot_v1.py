@@ -637,43 +637,58 @@ def send_button3(chat_id, user_email):
     # user_email = 'fafa@gmail.com'
     # print(user_email)
     # Send a POST request to the server
-    response = requests.post('http://136.243.86.130/api/find-server-test' ,  headers={'email': user_email , 'chat':str(chat_id)})
+    response = requests.post('http://136.243.86.130/api/find-server-test' ,  data={'email': user_email , 'chat':str(chat_id)}, headers={'token':'UGFGtZ.RkMfiqfy80O5EP0VoBiVrcs3GGcjJjGKAyr2UAxNtG'})
 
     if response.status_code == 200:
         
         # Parse the JSON response
-        servers = response.json() 
-        
-        # Create buttons for each available server
-            
+        servers = response.json()
+        # tel_send_message(chat_id, str(servers)) 
         buttons = []
-        for server in servers:
-            # tel_send_message(chat_id, str(chat_id))
-            server_name = server['name']
-            # server_id = "server_id:" + str(server['id'])
-            
-            server_id =server['id']
-            buttons.append([{"text": server_name, "callback_data": str(server_id)}])
-            
-        # Build the keyboard markup
-        reply_markup = {
-            "keyboard": buttons,
-            "one_time_keyboard": True  # Optional: Hide the keyboard after selection
-        }
+        if len(servers)>2:
+            # Create buttons for each available server
+            # buttons = []
+            for server in servers:
+                # tel_send_message(chat_id, str(chat_id))
+                server_name = server['name']
+                # server_id = "server_id:" + str(server['id'])
+                    
+                server_id =server['id']
+                    
+                buttons.append([{"text": server_name, "callback_data": str(server_id)}])
+                
+                
+            # Build the keyboard markup
+            reply_markup = {
+                "keyboard": buttons,
+                "one_time_keyboard": True  # Optional: Hide the keyboard after selection
+            }
 
-        # Build the payload based on available servers
-        payload = {
-            'chat_id': chat_id,
-            'text': "ایمیل شما دریافت شد. لطفا سرور مورد نظر را انتخاب کنید!",
-            'reply_markup': reply_markup
-            # 'reply_markup': reply_markup
-        }
+            # Build the payload based on available servers
+            payload = {
+                'chat_id': chat_id,
+                'text': "ایمیل شما دریافت شد. لطفا سرور مورد نظر را انتخاب کنید!",
+                'reply_markup': reply_markup,
+                # 'text': str(servers)
+                # 'reply_markup': reply_markup
+            }
 
         # Send the message with the dynamic keyboard
+
+        else:   
+            # tel_send_message(chat_id, str(servers)) 
+            
+            payload = {
+                'chat_id': chat_id,
+                'text': str(servers)
+                # 'text': str(servers)
+                # 'reply_markup': reply_markup
+            }
+            
+        
         r = requests.post(url, json=payload)
         
         return r
-
     # Handle if the response status code is not 200
     return None
 
@@ -685,7 +700,7 @@ def click_button3(chat_id, name_of_server):
     # name_of_server=name_of_server
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
     
-    response2 = requests.post('http://136.243.86.130/api/get-server-test')
+    response2 = requests.post('http://136.243.86.130/api/get-server-test', headers={'token':'UGFGtZ.RkMfiqfy80O5EP0VoBiVrcs3GGcjJjGKAyr2UAxNtG'})
 
     if response2.status_code == 200:
         servers2 = response2.json()
@@ -710,11 +725,14 @@ def click_button3(chat_id, name_of_server):
         
 
         if matching_id is not None:
-            response3 = requests.post('http://136.243.86.130/api/account-test' ,  headers={'provider': 'matching_id' , 'chat':str(chat_id)})
+            response3 = requests.post('http://136.243.86.130/api/account-test' ,  data={'provider': str(matching_id) , 'chat':str(chat_id)}, headers={'token':'UGFGtZ.RkMfiqfy80O5EP0VoBiVrcs3GGcjJjGKAyr2UAxNtG'})
             
             if response3.status_code == 200:
                 # Parse the JSON response
                 servers3 = response3.json() 
+                #data3 = json.loads(servers3)
+                # Convert the object to an array
+                
         # else:
         #     print(f"No matching name found for '{name_of_server}' in the dictionaries.")
 
@@ -732,7 +750,7 @@ def click_button3(chat_id, name_of_server):
                     'chat_id': chat_id,
                     # 'text': matching_id
                     # 'text': chat_id
-                    'text': servers3
+                    'text': str(servers3)
                 }
 
         r = requests.post(url, json=payload)
