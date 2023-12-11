@@ -55,6 +55,32 @@
 
 
 
+#-------------------------------------------------------------------------------------
+# import numpy as np
+import os
+file_path = os.path.abspath('/home/telegrambot/database')
+import sys
+sys.path.append(file_path)
+from db import DB
+
+db = DB()
+mycursor=db.get_cursor()
+users = db.select("SELECT id,name FROM provider ")
+db.get_commit()
+
+# users=np.array(users)
+# print(users)
+#-------------------------------------------------------------------------------------
+# servers2=users
+# matching_id = None
+# for button in servers2:
+#     if button[1] == 'های آمریکا':
+#         matching_id = button[0]
+#         break 
+    
+# print(matching_id)
+
+
 
 
 
@@ -65,42 +91,6 @@ from flask import request
 from flask import Response
 import requests
 import json
-#---------------------------------------
-# import mysql.connector
-# import dotenv
-# from dotenv import dotenv_values
-# import os
-# import pandas as pd 
-
-#reding the table from server-----------------------------------------------------------------------------------------------------------------
-
-# filename = os.path.basename(__file__)
-# path = str(__file__).replace(filename, '')
-# # env = dotenv_values(path + '.env')
-# # env = dotenv_values(r'C:\Users\satia\Desktop\137\zobale'+'.env')
-# query = "SELECT * "
-# query += " FROM `request_statistics`"
-# query += " "
-
-# try:
-#     connection = mysql.connector.connect(file_path + 'holoo-service.mysql')
-
-# #    connection = mysql.connector.connect(host="192.168.168.125", database="requestdb", user="requestuser",
-#                                          #password="SxfWL7myDid1JBqS")
-# except mysql.connector.Error as err:
-#     print('There was an error connecting to the database!!!')
-#     print(err)
-#     exit()
-# cursor = connection.cursor(dictionary=True)
-# cursor.execute(query)
-# all_servers = cursor.fetchall()
-# all_servers = pd.DataFrame(all_servers)
-# # print (dfm)
-# if connection.is_connected():
-#     cursor.close()
-#     connection.close()
-#------------------------------------------------------------------------------------------------    
-
 
 
 
@@ -382,250 +372,7 @@ def tel_upload_file(file_id):
   
   
   
-# #   #4444444444444444444444444444444444444444
 
-
-# def send_message(chat_id, text, reply_markup=None):
-#     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-
-#     payload = {
-#         'chat_id': chat_id,
-#         'text': text
-#     }
-
-#     if reply_markup:
-#         payload['reply_markup'] = reply_markup
-
-#     response = requests.post(url, json=payload)
-#     return response
-
-# def send_button2(chat_id):
-#     # Send a message to the user asking for their email
-#     send_message(chat_id, 'Please enter your email!')
-
-# def handle_message(message):
-#     chat_id = message['chat']['id']
-#     text = message['text']
-
-#     # Check if the message is an email
-#     if '@' in text:
-#         email = text
-
-#         # Save the user's email
-
-#         # Send a POST request to the server with email and chat ID as headers
-#         headers = {
-#             'email': email,
-#             'chat': str(chat_id)
-#         }
-#         response = requests.post('http://136.243.86.130/api/find-server-test', headers=headers)
-
-#         if response.status_code == 200:
-#             # Parse the JSON response
-#             servers = response.json()
-
-#             # Create buttons for each available server
-#             buttons = []
-#             for server in servers:
-#                 server_name = server['name']
-#                 server_id = server['id']
-#                 buttons.append([{"text": server_name, "callback_data": str(server_id)}])
-
-#             # Build the keyboard markup
-#             reply_markup = {
-#                 "keyboard": buttons,
-#                 "one_time_keyboard": True  # Optional: Hide the keyboard after selection
-#             }
-
-#             # Build the payload based on available servers
-#             payload = {
-#                 'chat_id': chat_id,
-#                 'text': "سرور مورد نظر را انتخاب کنید!",
-#                 'reply_markup': reply_markup
-#             }
-
-#             # Send the message with the dynamic keyboard
-#             r = requests.post(url, json=payload)
-#             return r
-
-#         # Handle if the response status code is not 200
-#         return None
-
-# def start_polling():
-#     url = f'https://api.telegram.org/bot{TOKEN}/getUpdates'
-
-#     response = requests.get(url)
-#     if response.status_code == 200:
-#         data = response.json()
-#         for update in data['result']:
-#             # Process each received message
-#             handle_message(update['message'])
-
-#         # Get the highest update ID to set the offset for the next polling request
-#         if data['result']:
-#             max_update_id = max([update['update_id'] for update in data['result']])
-#             offset = max_update_id + 1
-#         else:
-#             offset = None
-
-#         # Set the offset and continue polling
-#         params = {
-#             'offset': offset
-#         }
-#         response = requests.get(url, params=params)
-#         if response.status_code == 200:
-#             start_polling()
-
-
-
-# #   #44444444444444444444444444444444444444    
-
-##1pous****************************************************
-
-# def send_button3(chat_id, user_email):
-#     chat_id = chat_id
-#     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-#     print(user_email)
-
-#     # Send a POST request to the server
-#     response = requests.post('http://136.243.86.130/api/find-server-test', headers={'email': str(user_email), 'chat': str(chat_id)})
-
-#     if response.status_code == 200:
-#         # Parse the JSON response
-#         servers = response.json()
-
-#         # Create buttons for each available server
-#         buttons = []
-#         for server in servers:
-#             server_name = server['name']
-#             server_id = server['id']
-#             buttons.append([{"text": server_name, "callback_data": str(server_id)}])
-
-#         # Build the keyboard markup
-#         reply_markup = {
-#             "keyboard": buttons,
-#             "one_time_keyboard": True  # Optional: Hide the keyboard after selection
-#         }
-
-#         # Build the payload based on available servers
-#         payload = {
-#             'chat_id': chat_id,
-#             'text': "سرور مورد نظر را انتخاب کنید!",
-#             'reply_markup': reply_markup
-#         }
-
-#         # Send the message with the dynamic keyboard
-#         r = requests.post(url, json=payload)
-#         return r
-
-#     # Handle if the response status code is not 200
-#     return None
-
-
-
-##1plus****************************************************  
-
-# def test():
-#     if request.method == 'POST':
-#         msg = request.get_json() 
-#         try:
-#             chat_id, txt = tel_parse_message(msg)
-
-#             if '@' in txt :
-#                 email2 = txt
-#                 send_button3(chat_id, email2 )
-#         except:
-#             tel_send_message(chat_id,'error')
-            
-            
-#00000000000000000000000000000000000000000000000000000000000000
-
-# def send_button3(chat_id, user_email):
-#     chat_id = chat_id
-#     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-
-#     response = requests.post('http://136.243.86.130/api/find-server-test', headers={'email': user_email, 'chat': str(chat_id)})
-
-#     if response.status_code == 200:
-#         servers = response.json()
-
-#         buttons = []
-#         for server in servers:
-#             server_name = server['name']
-#             server_id = server['id']
-#             buttons.append([{"text": server_name, "callback_data": str(server_id)}])
-
-#         reply_markup = {
-#             "keyboard": buttons,
-#             "one_time_keyboard": True
-#         }
-
-#         payload = {
-#             'chat_id': chat_id,
-#             'text': "ایمیل شما دریافت شد. لطفا سرور مورد نظر را انتخاب کنید!",
-#             'reply_markup': reply_markup
-#         }
-
-#         r = requests.post(url, json=payload)
-
-#         return r
-
-#     return None
-
-
-# def process_callback(callback_query):
-#     chat_id = callback_query['message']['chat']['id']
-#     server_id = callback_query['data']
-#     user_email = callback_query['message']['reply_to_message']['text'].split(' ')[1]
-
-#     headers = {
-#         'id': server_id,
-#         'email': email,
-#         'chat': str(chat_id)
-#     }
-
-#     response = requests.post('http://136.243.86.130/api/account-test', headers=headers)
-
-#     if response.status_code == 200:
-#         server_info = response.json()
-
-#         # Extract the required information from the server_info JSON
-#         # and construct the message to send back to the user
-
-#         # Example: Extracting server IP and port
-#         server_ip = server_info['ip']
-#         server_port = server_info['port']
-
-#         message = f"Server Information:\nIP: {server_ip}\nPort: {server_port}"
-
-#         # Send the message back to the user
-#         url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-#         payload = {
-#             'chat_id': chat_id,
-#             'text': message
-#         }
-
-#         requests.post(url, json=payload)
-
-
-# # Example usage
-# # Assuming you have received a callback_query from the user
-
-# callback_query = {
-#     'message': {
-#         'chat': {
-#             'id': 'user_chat_id'
-#         },
-#         'reply_to_message': {
-#             'text': 'ایمیل شما دریافت شد. لطفا سرور مورد نظر را انتخاب کنید! email@example.com'
-#         }
-#     },
-#     'data': 'selected_server_id'
-# }
-
-# process_callback(callback_query)
-
-# #00000000000000000000000000000000000000000000000000000000000000
 # # #11111111111111111111111111111111111111111111111111111111
 user_email = None  # Global variable to store user email
 
@@ -697,379 +444,168 @@ def click_button3(chat_id, name_of_server):
 
 
     chat_id = chat_id
-    # name_of_server=name_of_server
+    name_of_server=name_of_server
     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
     
-    response2 = requests.post('http://136.243.86.130/api/get-server-test', headers={'token':'UGFGtZ.RkMfiqfy80O5EP0VoBiVrcs3GGcjJjGKAyr2UAxNtG'})
+    ## using another API
+    # response2 = requests.post('http://136.243.86.130/api/get-server-test', headers={'token':'UGFGtZ.RkMfiqfy80O5EP0VoBiVrcs3GGcjJjGKAyr2UAxNtG'})
 
-    if response2.status_code == 200:
-        servers2 = response2.json()
+    # if response2.status_code == 200:
+    #     servers2 = response2.json()
         
-        # buttons2 = [
-        #     {"id": 1, "name": "های آمریکا", "irancell": "123", "mci": "456"},
-        #     {"id": 2, "name": "های روسیه", "irancell": "789", "mci": "012"},
-        #     {"id": 3, "name": "های آلمان", "irancell": "345", "mci": "678"}
-        # ]
+    #     # buttons2 = [
+    #     #     {"id": 1, "name": "های آمریکا", "irancell": "123", "mci": "456"},
+    #     #     {"id": 2, "name": "های روسیه", "irancell": "789", "mci": "012"},
+    #     #     {"id": 3, "name": "های آلمان", "irancell": "345", "mci": "678"}
+    #     # ]
 
-        # text = "hi Russia"
+    #     # text = "hi Russia"
 
-        matching_id = None
+    #     matching_id = None
 
-        for button in servers2:
-            if button["name"] == name_of_server:
-                matching_id = button["id"]
-                break
+    #     for button in servers2:
+    #         if button["name"] == name_of_server:
+    #             matching_id = button["id"]
+    #             break
+    
+    
+    #using dtabase to read servers data from table
+    servers2=users
+    matching_id = None
+    for button in servers2:
+        if button[1] == name_of_server:
+            matching_id = button[0]
+            break    
+        
+    if matching_id is not None:
+        response3 = requests.post('http://136.243.86.130/api/account-test' ,  data={'provider': str(matching_id) , 'chat':str(chat_id)}, headers={'token':'UGFGtZ.RkMfiqfy80O5EP0VoBiVrcs3GGcjJjGKAyr2UAxNtG'})
             
+        if response3.status_code == 200:
+            # Parse the JSON response
+            servers3 = response3.json() 
+                
+            payload = {
+                'chat_id': chat_id,
+                # 'text': matching_id
+                # 'text': chat_id
+                'text': str(servers3)
+            }
+
+    r = requests.post(url, json=payload)
+
+    return r    
             
     
         
 
-        if matching_id is not None:
-            response3 = requests.post('http://136.243.86.130/api/account-test' ,  data={'provider': str(matching_id) , 'chat':str(chat_id)}, headers={'token':'UGFGtZ.RkMfiqfy80O5EP0VoBiVrcs3GGcjJjGKAyr2UAxNtG'})
+        # if matching_id is not None:
+        #     response3 = requests.post('http://136.243.86.130/api/account-test' ,  data={'provider': str(matching_id) , 'chat':str(chat_id)}, headers={'token':'UGFGtZ.RkMfiqfy80O5EP0VoBiVrcs3GGcjJjGKAyr2UAxNtG'})
             
-            if response3.status_code == 200:
-                # Parse the JSON response
-                servers3 = response3.json() 
-                #data3 = json.loads(servers3)
-                # Convert the object to an array
+        #     if response3.status_code == 200:
+        #         # Parse the JSON response
+        #         servers3 = response3.json() 
                 
-        # else:
-        #     print(f"No matching name found for '{name_of_server}' in the dictionaries.")
+        #         payload = {
+        #             'chat_id': chat_id,
+        #             # 'text': matching_id
+        #             # 'text': chat_id
+        #             'text': str(servers3)
+        #         }
 
-        # buttons = []
-        # for server in servers2:
-        #     server_name = server['name']
-        #     server_id = server['id']  # Use server_id directly
-        #     buttons.append([{"text": server_name, "callback_data": str(server_id)}])
+        # r = requests.post(url, json=payload)
 
-        # reply_markup = {
-        #     "inline_keyboard": buttons  # Use inline_keyboard for callback buttons
-        # }
-
-                payload = {
-                    'chat_id': chat_id,
-                    # 'text': matching_id
-                    # 'text': chat_id
-                    'text': str(servers3)
-                }
-
-        r = requests.post(url, json=payload)
-
-        return r
+        # return r
 
     return None
 #888888888888888888888888888888888888888888888888888888888
-# # #1111111111111111111111111111111111111111111111111111111111111111111111111111
 
-# import requests
+# # #33333333333333333333333333333333333333333333333333333333333333333333333333333333333
 
-# def get_user_email(chat_id):
+
+# def get_user_email():
+#     chat_id=chat_id
 #     response = requests.get(f'https://api.telegram.org/bot{TOKEN}/getUpdates')
     
-#     print("Response status code:", response.status_code)
-
 #     if response.status_code == 200:
 #         data = response.json()
-#         print("API response data:", data)
-
 #         if 'result' in data and len(data['result']) > 0:
 #             # Assuming the latest message is in the first result
 #             if 'message' in data['result'][0]:
 #                 message = data['result'][0]['message']
-#                 print("Received message:", message)
-
 #                 if 'text' in message:
 #                     user_email = message['text']
-#                     print("User email:", user_email)
 #                     return user_email
     
 #     return None
 
-# #33333333333333333333333333333333333333333333333333333333333333333333333333333333333
+# def process_messages():
+#     while True:
+#         user_email = get_user_email()
+#         chat_id=chat_id
+#         if user_email:
+#             # Send a POST request to the server with email and chat_id in the headers
+#             # headers = {'email': user_email, 'chat': str(chat_id)}
+#             response = requests.post('http://136.243.86.130/api/find-server-test' ,  headers={'email': user_email , 'chat':str(chat_id)})
+    
+#             if response.status_code == 200:
+#                 # Parse the JSON response
+#                 data = response.json()
+    
+#                 # Extract the available servers information
+#                 servers = data['servers']
+    
+#                 # Create buttons for each available server
+#                 buttons = []
+#                 for server in servers:
+#                     server_name = server['name']
+#                     server_id = server['id']
+#                     buttons.append([{"text": server_name, "callback_data": str(server_id)}])
+    
+#                 # Build the keyboard markup
+#                 reply_markup = {
+#                     "keyboard": buttons,
+#                     "one_time_keyboard": True  # Optional: Hide the keyboard after selection
+#                 }
+    
+#                 # Build the payload based on available servers
+#                 payload = {
+#                     'chat_id': chat_id,
+#                     'text': "سرور مورد نظر را انتخاب کنید!",
+#                     'reply_markup': reply_markup
+#                 }
+    
+#                 # Send the message with the dynamic keyboard
+#                 url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
+#                 r = requests.post(url, json=payload)
+    
+#                 # Break the loop after sending the message
+#                 return r
 
+#             # Handle if the response status code is not 200
+#             return None
 
-def get_user_email():
-    chat_id=chat_id
-    response = requests.get(f'https://api.telegram.org/bot{TOKEN}/getUpdates')
-    
-    if response.status_code == 200:
-        data = response.json()
-        if 'result' in data and len(data['result']) > 0:
-            # Assuming the latest message is in the first result
-            if 'message' in data['result'][0]:
-                message = data['result'][0]['message']
-                if 'text' in message:
-                    user_email = message['text']
-                    return user_email
-    
-    return None
-
-def process_messages():
-    while True:
-        user_email = get_user_email()
-        chat_id=chat_id
-        if user_email:
-            # Send a POST request to the server with email and chat_id in the headers
-            # headers = {'email': user_email, 'chat': str(chat_id)}
-            response = requests.post('http://136.243.86.130/api/find-server-test' ,  headers={'email': user_email , 'chat':str(chat_id)})
-    
-            if response.status_code == 200:
-                # Parse the JSON response
-                data = response.json()
-    
-                # Extract the available servers information
-                servers = data['servers']
-    
-                # Create buttons for each available server
-                buttons = []
-                for server in servers:
-                    server_name = server['name']
-                    server_id = server['id']
-                    buttons.append([{"text": server_name, "callback_data": str(server_id)}])
-    
-                # Build the keyboard markup
-                reply_markup = {
-                    "keyboard": buttons,
-                    "one_time_keyboard": True  # Optional: Hide the keyboard after selection
-                }
-    
-                # Build the payload based on available servers
-                payload = {
-                    'chat_id': chat_id,
-                    'text': "سرور مورد نظر را انتخاب کنید!",
-                    'reply_markup': reply_markup
-                }
-    
-                # Send the message with the dynamic keyboard
-                url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-                r = requests.post(url, json=payload)
-    
-                # Break the loop after sending the message
-                return r
-
-            # Handle if the response status code is not 200
-            return None
-
-def send_button2(chat_id):
-    url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-    
-    # Send a message to the user to request their email
-    email_message = "Please enter your email:"
-    email_payload = {
-        'chat_id': chat_id,
-        'text': email_message
-    }
-    email_response = requests.post(url, json=email_payload)
-    
-    if email_response.status_code == 200:
-        # Start the message processing loop
-        process_messages()
-    
-    # Handle if the response status code is not 200
-    return
-
-
-# #333333333333333333333333333333333333333333333333333333333333333333333333333333333333
-      
-# # # # #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 # def send_button2(chat_id):
 #     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
     
-    
-#     # Send a POST request to the server
-#     response = requests.post('http://136.243.86.130/api/find-server-test', data={'chat_id': chat_id})
-
-#     if response.status_code == 200:
-#         # Parse the JSON response
-#         servers = response.json()
-
-#         # Create buttons for each available server
-#         buttons = []
-#         for server in servers:
-#             server_name = server['name']
-#             server_id = server['id']
-#             buttons.append({'text': server_name, 'callback_data': str(server_id)})
-                
-                        
-#         reply_markup = {'inline_keyboard': [buttons]}
-        
-
-
-#         payload = {'chat_id': chat_id, 'text': "سرور مورد نظر را انتخاب کنید!", 'reply_markup': {
-#                 "keyboard": [
-#                     [
-#                         {"text": "2های روسیه "},
-#                         {"text":"های آلمان برلین"},
-#                         {"text": "های مسکو"},
-#                         {"text":"های آمریکا"}
-#                     ]
-#                 ]
-#             }}
-    
-
- 
-#     r = requests.post(url, json=payload)
-#     return r
-#%%%%%%%%%%%%%
-
-# def start():
-#     chat_id = chat_id
-#     get_available_servers(chat_id)
-
-# def get_available_servers(chat_id):
-#     # Send a POST request to the server
-#     response = requests.post('http://136.243.86.130/api/find-server-test', data={'chat_id': chat_id})
-
-#     if response.status_code == 200:
-#         # Parse the JSON response
-#         servers = response.json()
-
-#         # Create buttons for each available server
-#         buttons = []
-#         for server in servers:
-#             server_name = server['name']
-#             server_id = server['id']
-#             buttons.append({'text': server_name, 'callback_data': str(server_id)})
-
-#         # Create a button grid
-#         reply_markup = {'inline_keyboard': [buttons]}
-
-#         # Display the buttons
-#         print('Please select a server:')
-#         for button in buttons:
-#             print(button['text'])
-
-#         # Wait for user input
-#         selected_server = input()
-
-#         # Find the selected server
-#         server = next((server for server in servers if str(server['id']) == selected_server), None)
-
-#         if server:
-#             handle_button_click(server)
-#         else:
-#             print('Invalid server selection.')
-#     else:
-#         # Handle error if the request was unsuccessful
-#         print('Error:', response.status_code)
-
-# def handle_button_click(server):
-#     server_id = server['id']
-
-#     # Send a POST request to create an account for the selected server
-#     response = requests.post('http://136.243.86.130/api/account-test', data={'server_id': server_id})
-
-#     if response.status_code == 200:
-#         # Parse the JSON response
-#         server_info = response.json()
-
-#         # Save server information in a JSON file
-#         with open('inf.json', 'w') as f:
-#             json.dump(server_info, f)
-
-#         # Display the necessary information to the user
-#         print(f"Server Info:\n{server_info}")
-
-#         # Call the Sendinfo function to send the server info
-#         Sendinfo()
-#     else:
-#         # Handle error if the request was unsuccessful
-#         print('Error:', response.status_code)
-
-# def Sendinfo():
-#     with open('inf.json', 'r') as f:
-#         server_info = json.load(f)
-
-#     # Replace 'YOUR_CHAT_ID' with the desired recipient chat ID
-#     chat_id = chat_id
-#     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
-
-#     payload = {
+#     # Send a message to the user to request their email
+#     email_message = "Please enter your email:"
+#     email_payload = {
 #         'chat_id': chat_id,
-#         'text': " بفرمایید اکانت تست ",
-#         'reply_markup': json.dumps(server_info)
-#     }       
-#     response = requests.post(url, json=payload)
-
-#     if response.status_code == 200:
-#         return 'Success'
-#     else:
-#         return f'Error: {response.status_code}'
-
-
-# #$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
-
-
-# user_email = None  # Global variable to store user email
-
-# def send_button4(chat_id, email):
-#     global user_email  # Access the global variable
-#     user_email = email  # Store the user email
-
-#     chat_id = chat_id
-#     url = f'https://api.telegram.org/bot{TOKEN}/sendMessage'
+#         'text': email_message
+#     }
+#     email_response = requests.post(url, json=email_payload)
     
-#     response = requests.post('http://136.243.86.130/api/find-server-test', headers={'email': user_email, 'chat': str(chat_id)})
-
-#     if response.status_code == 200:
-#         servers = response.json()
-
-#         buttons = []
-#         for server in servers:
-#             server_name = server['name']
-#             server_id = "server_id:" + str(server['id'])
-#             buttons.append([{"text": server_name, "callback_data": str(server_id)}])
-
-#         reply_markup = {
-#             "keyboard": buttons,
-#             "one_time_keyboard": True
-#         }
-
-#         payload = {
-#             'chat_id': chat_id,
-#             'text': "ایمیل شما دریافت شد. لطفا سرور مورد نظر را انتخاب کنید!",
-#             'reply_markup': reply_markup
-#         }
-
-#         r = requests.post(url, json=payload)
-
-#         return
-
-    # return None
+#     if email_response.status_code == 200:
+#         # Start the message processing loop
+#         process_messages()
+    
+#     # Handle if the response status code is not 200
+#     return
 
 
-# @app.route('/', methods=['GET', 'POST'])
-# def index():
-#     if request.method == 'POST':
-#         msg = request.get_json()
-#         txt = msg.get('txt')
-#         chat_id, txt, username = tel_parse_message(msg)
-#         if txt == "اکانت تست":
-#             tel_send_message(chat_id, 'لطفا ایمیل خود را ارسال نمائید.')
-#         elif '@' in txt:
-#             email = txt
-#             send_button4(chat_id, email)
-#         elif txt.startswith("server_id:"):
-#             server_id = txt.split(":")[1]
-#             headers = {
-#                 'email': user_email,  # Access the global variable
-#                 'chat': str(chat_id),
-#                 'server_id': server_id
-#             }
-#             response = requests.post('http://136.243.86.130/api/account-test', headers=headers)
-#             response_data = response.json()
-#             message = response_data['message']
-#             tel_send_message(chat_id, message)
-#         else:
-#             tel_send_message(chat_id, 'پیام شما معتبر نیست.')
+# # #333333333333333333333333333333333333333333333333333333333333333333333333333333333333
+      
 
-# if __name__ == "__main__":
-#     app.run(host="0.0.0.0",port='8000')
-#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
  
 @ app.route('/', methods=['GET', 'POST'])
 def index():
