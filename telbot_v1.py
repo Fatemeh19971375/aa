@@ -427,7 +427,7 @@ def send_button3(chat_id, user_email):
             
             payload = {
                 'chat_id': chat_id,
-                'text': str(servers)
+                'text': str(servers['message'])
                 # 'text': str(servers)
                 # 'reply_markup': reply_markup
             }
@@ -483,15 +483,65 @@ def click_button3(chat_id, name_of_server):
         if response3.status_code == 200:
             # Parse the JSON response
             servers3 = response3.json() 
+            
+            if "message" in servers3:
                 
-            payload = {
-                'chat_id': chat_id,
-                # 'text': matching_id
-                # 'text': chat_id
-                'text': str(servers3)
-            }
+                payload = {
+                    'chat_id': chat_id,
+                    # 'text': matching_id
+                    # 'text': chat_id
+                    'text': str(servers3['message'])
+                    # 'txt': name_of_server
+                    # 'text': str('hi')
+                }
+            
+            # else:
+            #     # Print the test account information
+            #     username = servers3["username"]
+            #     password = servers3["password"]
+            #     host = servers3["host"]
+            #     port = servers3["port"]
+            #     info_message = f"بفرمایید اکانت تست:\n username: {username}\n password: {password}\n host: {host}\n port: {port}"
+            #     payload = {
+            #         'chat_id': chat_id,
+            #         # 'text': matching_id
+            #         # 'text': chat_id
+            #         'text': info_message
+            #         # 'txt': name_of_server
+                    
+                # }
+            else:
+                
+                username = servers3["username"]
+                password = servers3["password"]
+                host = servers3["host"]
+                port = servers3["port"]
+                
+        #         info_messages = [
+        # f"Username: {username}",
+        # f"Password: {password}",
+        # f"Host: {host}",
+        # f"Port: {port}"]
+                info_messages = [
+        "Username:",
+        f"{username}",
+        "Password:",
+        f"{password}",
+        "Host:",
+        f"{host}",
+        "Port:",
+        f"{port}"]
+                
+                
+                
+                for info_message in info_messages:
+                    payload = {
+            'chat_id': chat_id,
+            'text': info_message
+        }
+                
 
-    r = requests.post(url, json=payload)
+                    r = requests.post(url, json=payload)
 
     return r    
             
@@ -776,6 +826,8 @@ def index():
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0",port='8000')
+    
+#
 
 
 
